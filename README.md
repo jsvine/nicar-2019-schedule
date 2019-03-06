@@ -1,24 +1,24 @@
-# NICAR 2018 Schedule as Structured Data
+# NICAR 2019 Schedule as Structured Data
 
-This repository contains the [NICAR 2018 conference schedule](https://www.ire.org/conferences/nicar18/schedule/) as JSON and CSV files, plus the underlying Python scraper.
+This repository contains the [NICAR 2019 conference schedule](https://www.ire.org/events-and-training/conferences/nicar-2019/schedule) as JSON and CSV files, plus the underlying Python scraper.
 
 *Going to NICAR? You might be interested in the [data, analyses, and tools we've open-sourced at BuzzFeed News](https://github.com/buzzfeednews/everything).*
 
 ## Get the data
 
-*Last updated March 11, 2018 @ 8:55AM Chicago time*
+*Last updated March 5, 2019*
 
-- [JSON schedule](schedule/nicar-2018-schedule.json?raw=true)
-- [CSV schedule](schedule/nicar-2018-schedule.csv?raw=true)
+- [JSON schedule](schedule/nicar-2019-schedule.json?raw=true)
+- [CSV schedule](schedule/nicar-2019-schedule.csv?raw=true)
 
 ## Run the scraper yourself
 
 To run the scraper, you'll need Python 3. To get started, execute the following commands in your terminal:
 
 ```bash
-mkvirtualenv nicar-2018-schedule # Optional, recommended
-git clone https://github.com/jsvine/nicar-2018-schedule.git
-cd nicar-2018-schedule
+mkvirtualenv nicar-2019-schedule # Optional, recommended
+git clone https://github.com/jsvine/nicar-2019-schedule.git
+cd nicar-2019-schedule
 pip install -r requirements.txt
 ```
 

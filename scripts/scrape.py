@@ -4,22 +4,24 @@ import lxml.html
 import itertools
 from collections import OrderedDict
 from operator import itemgetter
+import random
 import argparse
 import json
 import csv
 import sys
 import re
 
-DEST = "schedule/nicar-2018-schedule"
+DEST = "schedule/nicar-2019-schedule"
 
-SCHEDULE_URL = "https://www.ire.org/conferences/nicar18/schedule/"
+SCHEDULE_URL = "https://www.ire.org/events-and-training/conferences/nicar-2019/schedule"
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:65.0) Gecko/20100101 Firefox/65.0"
 
 DATES = [
-    "2018-03-07",
-    "2018-03-08",
-    "2018-03-09",
-    "2018-03-10",
-    "2018-03-11",
+    "2019-03-06",
+    "2019-03-07",
+    "2019-03-08",
+    "2019-03-09",
+    "2019-03-10",
 ]
 
 def extract_speakers(description):
@@ -27,19 +29,19 @@ def extract_speakers(description):
     If speakers are listed in the first paragraph of the description,
     extract them.
     """
-    speaker_pat = re.compile(r"^(Speakers?: ([^\n]+))?(.*)$", re.DOTALL)
+    speaker_pat = re.compile(r"^(Speakers?:\s+([^\n]+))?(.*)$", re.DOTALL)
     match = re.match(speaker_pat, description)
     graf, names, rest = match.groups()
-    return names, rest.strip()
+    return names
 
 def convert_time(ts):
     """
-    Convert IRE time string (e.g., "12:30 p.m.", "8 a.m.") to 24-hour time. Assmes that nothing's happening between midnight and 1am.
+    Convert IRE time string (e.g., "12:30 pm", "8 am") to 24-hour time. Assmes that nothing's happening between midnight and 1am.
     """
     nums, suffix = ts.split(" ")
-    if suffix == "p.m.":
+    if suffix == "pm":
         is_pm = True
-    elif suffix == "a.m.":
+    elif suffix == "am":
         is_pm = False
     else:
         raise ValueError("Can't parse " + ts)
@@ -59,27 +61,34 @@ def parse_session(el, date):
     Given an HTML element containing one session and the date of the session,
     extract the key information.
     """
-    s_type = el.cssselect(".col-10")[0].text_content().strip()
-    s_title = el.cssselect(".title3")[0].text_content().strip()
-    s_href = el.cssselect(".title3 a")[0].attrib["href"]
-    s_id = "/".join(s_href.split("/")[-3:-1])
-    grafs = el.cssselect(".col-60 p")
-    s_desc = "\n\n".join(p.text_content().strip() for p in grafs).strip()
-    s_desc_compact = re.sub(r"\n\n+", "\n\n", s_desc)
-    s_speakers, s_description = extract_speakers(s_desc_compact)
-    details = el.cssselect(".meta p")
-    s_room, s_time = (p.text_content().strip() for p in details)
+
+    def get_text(sel):
+        matches = el.cssselect(sel)
+        stripped = [ el.text_content().strip() for el in matches ]
+        return "\n\n".join(el for el in stripped if len(el)) or None
+
+    speakers_raw = get_text(".event-speakers")
+    if speakers_raw is None:
+        s_speakers = None
+    else:
+        s_speakers = re.sub(r"^Speakers?:\s+", "", speakers_raw)
+
+    s_time = get_text(".event-meta p")
     time_start, time_end = map(convert_time, s_time.split(" - "))
+
+    s_href = el.cssselect(".event-title a")[0].attrib["href"]
+    s_id = "/".join(s_href.split("/")[-3:-1])
+
     return OrderedDict([
-        ("title", s_title),
-        ("type", s_type),
-        ("description", s_description),
+        ("title", get_text(".event-title")),
+        ("type", get_text(".event-type")),
+        ("description", get_text(".event-content p:not(.event-speakers)")),
         ("speakers", s_speakers),
         ("date", date),
         ("time_start", time_start),
         ("time_end", time_end),
         ("length_in_hours", round(calculate_length(time_start, time_end), 3)),
-        ("room", s_room),
+        ("room", get_text(".event-meta h4")),
         ("event_id", s_id),
         ("event_url", "https://ire.org" + s_href),
     ])
@@ -106,9 +115,17 @@ def get_sessions():
     """
     Fetch and parse the schedule HTML from the NICAR webpage.
     """
-    html = fix_encoding(requests.get(SCHEDULE_URL).content)
+    html = fix_encoding(requests.get(
+        SCHEDULE_URL,
+        params = {
+            "r": random.random()
+        },
+        headers = {
+            "User-Agent": USER_AGENT
+        }
+    ).content)
     dom = lxml.html.fromstring(html)
-    day_els = dom.cssselect("ul.listview.pane")
+    day_els = dom.cssselect("ul.schedule-list.pane")
     days_zipped = zip(day_els, DATES)
     sessions_nested = [ parse_day(el, date) for el, date in days_zipped ]
     sessions = itertools.chain.from_iterable(sessions_nested)
