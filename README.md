@@ -6,7 +6,7 @@ This repository contains the [NICAR 2019 conference schedule](https://www.ire.or
 
 ## Get the data
 
-*Last updated March 5, 2019*
+*Last updated March 6, 2019 @ 7:30am Pacific*
 
 - [JSON schedule](schedule/nicar-2019-schedule.json?raw=true)
 - [CSV schedule](schedule/nicar-2019-schedule.csv?raw=true)
