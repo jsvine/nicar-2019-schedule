@@ -3263,19 +3263,6 @@
         "event_url": "https://ire.org/events-and-training/event/3433/4248/"
     },
     {
-        "title": "Spreadsheet add-ins you can't live without",
-        "type": "Hands-on",
-        "description": "Need to geocode? Clean up dirty data? Combine multiple worksheets? Count data by color? Other weird things you need to do to use that one funky spreadsheet that came in through a FOIA? Let's talk about the capabilities of some of the add-ins that are out there for Google Sheets and Excel.",
-        "speakers": "Jennifer Peebles of The Atlanta Journal-Constitution",
-        "date": "2019-03-10",
-        "time_start": "10:15",
-        "time_end": "11:15",
-        "length_in_hours": 1.0,
-        "room": "Salon C",
-        "event_id": "3433/4300",
-        "event_url": "https://ire.org/events-and-training/event/3433/4300/"
-    },
-    {
         "title": "Creating your first satellite image",
         "type": "Hands-on",
         "description": "In this hands-on training, we'll learn how to find, download, combine, and turn data captured by satellites into ready-for-publication images. We'll learn three ways to do this, one using entirely point and click tools, another using the command line, and a third using Google Earth Engine.\n\nThis session is good for someone who has never worked with satellite imagery before or wants a refresher.",
@@ -3339,5 +3326,18 @@
         "room": "Salon A&B",
         "event_id": "3433/4191",
         "event_url": "https://ire.org/events-and-training/event/3433/4191/"
+    },
+    {
+        "title": "TBD",
+        "type": null,
+        "description": null,
+        "speakers": null,
+        "date": "2019-03-10",
+        "time_start": "12:30",
+        "time_end": "12:30",
+        "length_in_hours": 0.0,
+        "room": "See printed schedule for room information",
+        "event_id": "3433/4300",
+        "event_url": "https://ire.org/events-and-training/event/3433/4300/"
     }
 ]
